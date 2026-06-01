@@ -1,7 +1,14 @@
 FROM uspdev/uspdev-php-apache:8.3
 
+COPY dokku-deploy/ldap.conf /etc/ldap/ldap.conf
+
 RUN sed -i 's|/var/www/html|/var/www/html/public|' \
     /etc/apache2/sites-available/000-default.conf
+
+RUN echo "[FreeTDS]" >> /etc/odbcinst.ini \
+    && echo "Description = FreeTDS Driver" >> /etc/odbcinst.ini \
+    && echo "Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" >> /etc/odbcinst.ini \
+    && echo "Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
 
 # Install LDAP dependencies
 RUN apt-get update && \
