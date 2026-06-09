@@ -1,24 +1,10 @@
-Ambiente:
+# portainer 
 
-    docker build --no-cache -t webapps .
-    docker compose up 
-    cp .env.example .env
-    docker exec -it webapps composer install
-    docker exec -it webapps php artisan key:generate
-    docker exec -it webapps php artisan migrate
+    docker swarm init --advertise-addr 192.168.0.95
+    docker stack deploy -c portainer.yml portainer
+    Acessar: http://192.168.0.95:9000/
 
-Usuário de teste:
+    senha: portainer-agent-stack
 
-    docker exec -it webapps php artisan tinker
-
-    $user = new \App\Models\User;
-    $user->email = 'admin@admin.com';
-    $user->name = 'admin';
-    $user->codpes = 0;
-    $user->password = Hash::make('admin');
-    $user->local = true;
-    \Spatie\Permission\Models\Permission::findOrCreate('admin', 'senhaunica');
-    $user->givePermissionTo('admin');
-    $user->save();
-
-Acessar http://localhost:8000/loginlocal
+    docker stack rm portainer
+    docker volume rm portainer_portainer_data
