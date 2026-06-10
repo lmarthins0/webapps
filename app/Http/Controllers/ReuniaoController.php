@@ -20,7 +20,6 @@ class ReuniaoController extends Controller
         ])->post(env('GWMARIADB_URL'), $payload);
 
         dd($response->json());
-
     }
 
     public function rustfs($app)
@@ -40,7 +39,6 @@ class ReuniaoController extends Controller
         $s3Client->createBucket([
             'Bucket' => $app,
         ]);
-
     }
 
     public function portainer()
@@ -65,7 +63,7 @@ class ReuniaoController extends Controller
         $endpointId = $endpoints[0]['Id'];
 
 
-$yaml = <<<'YAML'
+        $yaml = <<<'YAML'
 services:
   app:
     image: ghcr.io/fflch/sites:1.0.9
@@ -102,7 +100,5 @@ YAML;
             $response->status(),
             $response->json() ?: $response->body()
         );
-
-
     }
 }

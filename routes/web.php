@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Bucket\CreateBucketController;
+use App\Http\Controllers\Bucket\DeleteBucketController;
+use App\Http\Controllers\Bucket\TestConnectionBucketController;
+use App\Http\Controllers\Gwmariadb\TestGwmariadbConnectionController;
+use App\Http\Controllers\GwmariadbController;
 use App\Http\Controllers\WebappController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\PortainerController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ReuniaoController;
@@ -16,9 +22,22 @@ Route::get('/webapps/{webapp}', [WebappController::class, 'show']);
 
 
 # reunião
-Route::get('/portainer', [ReuniaoController::class, 'portainer']);
-Route::get('/gwmariadb', [ReuniaoController::class, 'gwmariadb']);
-Route::get('/rustfs/{app}', [ReuniaoController::class, 'rustfs']);
+//Route::get('/portainer', [ReuniaoController::class, 'portainer']);
+//Route::get('/gwmariadb', [ReuniaoController::class, 'gwmariadb']);
+//Route::get('/rustfs/{app}', [ReuniaoController::class, 'rustfs']);
 
+#Route::resource('gwmariadb', GwmariadbController::class);
+Route::resource('portainer', PortainerController::class);
 
+Route::prefix('gwmariadb')->group(function () {
+    Route::get('/', [GwmariadbController::class, 'index']);
+    Route::get('/store/{webapp}', [GwmariadbController::class, 'store']);
+    Route::get('/delete/{webapp}', [GwmariadbController::class, 'destroy']);
+    Route::get('/testconnection', TestGwmariadbConnectionController::class);
+});
 
+Route::prefix('bucket')->group(function() {
+    Route::get('/store/{webapp}', CreateBucketController::class);
+    Route::get('/delete/{webapp}', DeleteBucketController::class);
+    Route::get('/test/{webapp}', TestConnectionBucketController::class);
+});

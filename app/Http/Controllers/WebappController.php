@@ -25,6 +25,7 @@ class WebappController extends Controller
     public function store(WebappRequest $request){
         $validated = $request->validated();
         $validated['user_id'] = auth()->user()->id;
+        $validated['dominio'] = $validated['dominio'] . '.fflch.usp.br';
 
         $webapp = Webapp::create($validated);
 

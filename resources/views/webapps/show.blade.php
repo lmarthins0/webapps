@@ -17,12 +17,14 @@
     <b>Solicitante: </b>
     <p>{{ $webapp->user->name }}</p>
 
-    <br><br><a href="/gwmariadb" class="btn btn-primary">Bancos de dados (Mônica)</a>
+    <br><br><a href="/gwmariadb/store/{{ $webapp->id }}" class="btn btn-primary">Bancos de dados (Mônica)</a>
+            <a href="/gwmariadb/testconnection" class="btn btn-secondary">Testar conexão</a>
     <br>
     Implementar: 1) Criar um banco de dados para o dominio, 2) Criar um usuário, 3) Criar uma senha para esse usuário e guardar localmente, 4) Conceder as permissões necessárias para o usuário acessar o banco de dados criado 5) Testar a conexão do app com o banco de dados criado. 6) opção de deletar o banco de dados
 
 
-    <br><br><a href="/rustfs/{{ $webapp->dominio }}" class="btn btn-primary">Configurar Bucket (Ricardo)</a>
+    <br><br><a href="/bucket/store/{{ $webapp->id }}" class="btn btn-primary">Configurar Bucket (Ricardo)</a>
+    <a href="/bucket/delete/{{ $webapp->id}}" class="btn btn-danger">Excluir bucket</a>
     Implementar: 1) Criar um bucket para o dominio (ok), 2) Criar um usuário, 3) Criar uma senha para esse usuário e guardar localmente, 4) Conceder as permissões necessárias para o usuário acessar o bucket criado 5) Testar a conexão do app com o bucket criado. 6) opção de deletar o bucket
     
 
