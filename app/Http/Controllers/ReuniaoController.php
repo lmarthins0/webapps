@@ -63,10 +63,10 @@ class ReuniaoController extends Controller
         $endpointId = $endpoints[0]['Id'];
 
 
-        $yaml = <<<'YAML'
+        $yaml = <<<YAML
 services:
   app:
-    image: ghcr.io/fflch/sites:1.0.9
+    image: {}
     restart: unless-stopped
     ports:
       - "8888:80"

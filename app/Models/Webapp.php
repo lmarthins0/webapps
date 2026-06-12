@@ -12,4 +12,9 @@ class Webapp extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function envVariables() 
+    {
+        return $this->hasMany(EnvVariables::class);
+    }
+
 }

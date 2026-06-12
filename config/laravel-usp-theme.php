@@ -19,6 +19,12 @@ $menu = [
         'url' => config('app.url') . '/webapps/create', // com caminho absoluto
         'can' => 'user',
     ],
+    [
+        'text' => 'Dockers',
+        'docker_menu' => [
+            'criar novo docker' => '/'
+        ]
+    ]
 
 ];
 
