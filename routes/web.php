@@ -3,6 +3,7 @@
 use App\Http\Controllers\Bucket\CreateBucketController;
 use App\Http\Controllers\Bucket\DeleteBucketController;
 use App\Http\Controllers\Bucket\TestConnectionBucketController;
+use App\Http\Controllers\DockerImageController;
 use App\Http\Controllers\Gwmariadb\TestGwmariadbConnectionController;
 use App\Http\Controllers\GwmariadbController;
 use App\Http\Controllers\WebappController;
@@ -18,10 +19,10 @@ Route::prefix('webapps')->group(function() {
     Route::get('/create', [WebappController::class, 'create']);
     Route::post('/store', [WebappController::class, 'store']);
     Route::get('/{webapp}', [WebappController::class, 'show']);
-    Route::get('/{webapp}/docker/create', [WebappDockerConfigController::class, 'create']);
-    Route::get('/{webapp}/docker/edit', [WebappDockerConfigController::class, 'edit']);
-    Route::post('/{webapp}/docker', [WebappDockerConfigController::class, 'store']);
-    Route::put('/{webapp}/docker/update', [WebappDockerConfigController::class, 'update']);
+    Route::get('/{webapp}/docker/image', [WebappDockerConfigController::class, 'create']);
+    Route::get('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'edit']);
+    Route::post('/{webapp}/docker/image', [WebappDockerConfigController::class, 'store']);
+    Route::post('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'update']);
 });
 
 # reunião
@@ -31,6 +32,8 @@ Route::prefix('webapps')->group(function() {
 
 #Route::resource('gwmariadb', GwmariadbController::class);
 #Route::resource('portainer', PortainerController::class);
+
+Route::resource('dockerimages', DockerImageController::class);
 
 Route::prefix('gwmariadb')->group(function () {
     Route::get('/', [GwmariadbController::class, 'index']);
@@ -47,6 +50,6 @@ Route::prefix('bucket')->group(function() {
 
 Route::prefix('portainer')->group(function() {
     Route::get('/', [PortainerController::class, 'index']);
-    Route::get('/store', [PortainerController::class, 'store']);
-    Route::get('/update', [PortainerController::class, 'update']);
+    Route::get('/{webapp}/store', [PortainerController::class, 'store']);
+    Route::get('/{webapp}/update', [PortainerController::class, 'update']);
 });

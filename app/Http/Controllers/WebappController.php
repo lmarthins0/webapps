@@ -17,10 +17,8 @@ class WebappController extends Controller
     public function show(Webapp $webapp)
     {
         //dd(($webapp->envVariables()->whereNotNull('value')->get()->isEmpty()));
-        if ($webapp->docker_tag == NULL && $webapp->tag_version == NULL):
+        if ($webapp->docker_image_id == NULL):
             $dockerStatus = 'not_configured';
-        elseif ($webapp->docker_tag == NULL || $webapp->tag_version == NULL || empty($webapp->envVariables()->whereNotNull('value')->get())):
-            $dockerStatus = 'partial_configured';
         else:
             $dockerStatus = 'configured';
         endif;

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class WebappDockerRequest extends FormRequest
+class DockerImageUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,16 @@ class WebappDockerRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'path' => 'required|string',
+            'tag' => 'required|string',
             'env_variables' => 'required|string'
         ];
     }
 
         public function messages(){
         return [
+            'path.required' => 'A tag docker é obrigatória.',
+            'tag.required' => 'A versão da tag é obrigatória.',
             'env_variables.required' => 'As variáveis de ambiente são obrigatórias.',
         ];
     }

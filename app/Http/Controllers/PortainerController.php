@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DockerImageService;
 use App\Services\WebappService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Inline;
 
 class PortainerController extends Controller
 {
@@ -15,30 +15,31 @@ class PortainerController extends Controller
      */
     public function index()
     {
-        $webapp = (new WebappService())->getWebappById(2);
+        $webapp = (new WebappService())->getWebappById(1);
+        $dockerImage = $webapp->dockerImage;
+        $env_variables = $webapp->envVariables;
+
+        $environment = [];
+        foreach ($env_variables as $env_variable):
+            $environment[$env_variable->name] = $env_variable->value;
+        endforeach;
+
         $yaml = [
             'services' => [
                 'app' => [
-                    'image' => '',
+                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
                     'restart' => 'unless-stopped',
                     'ports' => '8888:80',
-                    'environment' => [
-                        'APP_NAME' => 'TESTE',
-                        'DB_CONNECION' => 'sqlite',
-                        'APP_KEY' => 'base64:ZoysKy3Ypf5o5aObQFDLqD1H5E9gCsQL7cGWD43Mk1U=',
-                        'APP_ENV' => 'local',
-                        'APP_DEBUG' => 'true',
-                        'APP_URL' => 'http://192.168.0.95:8888/',
-                        'USP_THEME_SKIN' => 'fflch'
-                    ],
+                    'environment' => $environment,
                     'entrypoint' => [
-                        'sh', 
-                        '-c', 
+                        'sh',
+                        '-c',
                         'php artisan migrate --force && exec apache2-foreground'
                     ]
                 ]
             ]
         ];
+
         $parsedYaml = Yaml::dump($yaml, 4, 2);
         $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
         dd($parsedYaml);
@@ -58,6 +59,8 @@ class PortainerController extends Controller
     public function store(string $webappId)
     {
         $webapp = (new WebappService())->getWebappById($webappId);
+        $dockerImage = $webapp->dockerImage;
+        $webappName = explode('.', $webapp->dominio)[0];
 
         $portainerUrl = env('PORTAINER_URL');
         $username = env('PORTAINER_USERNAME');
@@ -79,43 +82,48 @@ class PortainerController extends Controller
         $endpointId = $endpoints[0]['Id'];
 
 
-        $yaml = <<<YAML
-services:
-  app:
-    image: {$webapp->docker_tag}:{$webapp->tag_version}
-    restart: unless-stopped
-    ports:
-      - "8888:80"
-    environment:
-      APP_NAME: "TESTE"
-      DB_CONNECTION: "sqlite"
-      APP_KEY: "base64:ZoysKy3Ypf5o5aObQFDLqD1H5E9gCsQL7cGWD43Mk1U="
-      APP_ENV: "local"
-      APP_DEBUG: "true"
-      APP_URL: "http://192.168.0.95:8888/"
-      USP_THEME_SKIN: "fflch"
-    entrypoint:
-      - sh
-      - -c
-      - |
-        php artisan migrate --force
-        exec apache2-foreground
-YAML;
+        $env_variables = $webapp->envVariables;
+        $environment = [];
+        foreach ($env_variables as $env_variable):
+            $environment[$env_variable->name] = $env_variable->value;
+        endforeach;
 
+        $yaml = [
+            'services' => [
+                'app' => [
+                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
+                    'restart' => 'unless-stopped',
+                    'ports' => ['8888:80'],
+                    'environment' => $environment,
+                    'entrypoint' => [
+                        'sh',
+                        '-c',
+                        'php artisan migrate --force && exec apache2-foreground'
+                    ]
+                ]
+            ]
+        ];
+
+        $parsedYaml = Yaml::dump($yaml, 4, 2);
+        $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
 
         $response = Http::withToken($jwt)
             ->post(
                 "{$portainerUrl}/api/stacks/create/standalone/string?endpointId={$endpointId}",
                 [
-                    'Name' => 'sites',
-                    'StackFileContent' => $yaml,
+                    'Name' => $webappName,
+                    'StackFileContent' => $parsedYaml,
                 ]
             );
 
-        dd(
-            $response->status(),
-            $response->json() ?: $response->body()
-        );
+        $responseDecoded = $response->json();
+        $webapp->status = "Publicado";
+        $webapp->stackId = $responseDecoded['Id'];
+        $webapp->save();
+
+        return redirect("/webapps/{$webapp->id}");
+
+        //dd($response->status(), $response->json() ?: $response->body());
     }
 
     /**
@@ -137,9 +145,73 @@ YAML;
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(string $webappId)
     {
-        //
+        $webapp = (new WebappService())->getWebappById($webappId);
+        $dockerImage = $webapp->dockerImage;
+        $stackId = $webapp->stackId;
+        $webappName = explode('.', $webapp->dominio)[0];
+
+        $portainerUrl = env('PORTAINER_URL');
+        $username = env('PORTAINER_USERNAME');
+        $password = env('PORTAINER_PASSWORD');
+
+        $auth = Http::post(
+            "{$portainerUrl}/api/auth",
+            [
+                'username' => $username,
+                'password' => $password,
+            ]
+        );
+
+        $jwt = $auth->json('jwt');
+
+        $endpoints = Http::withToken($jwt)
+            ->get("{$portainerUrl}/api/endpoints")
+            ->json();
+        $endpointId = $endpoints[0]['Id'];
+
+
+        $env_variables = $webapp->envVariables;
+        $environment = [];
+        foreach ($env_variables as $env_variable):
+            $environment[$env_variable->name] = $env_variable->value;
+        endforeach;
+
+        $yaml = [
+            'services' => [
+                'app' => [
+                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
+                    'restart' => 'unless-stopped',
+                    'ports' => ['8888:80'],
+                    'environment' => $environment,
+                    'entrypoint' => [
+                        'sh',
+                        '-c',
+                        'php artisan migrate --force && exec apache2-foreground'
+                    ]
+                ]
+            ]
+        ];
+
+        $parsedYaml = Yaml::dump($yaml, 4, 2);
+        $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
+
+        $response = Http::withToken($jwt)
+            ->put(
+                "{$portainerUrl}/api/stacks/{$stackId}?endpointId={$endpointId}",
+                [
+                    'Name' => $webappName,
+                    'StackFileContent' => $parsedYaml,
+                ]
+            );
+
+        return redirect("/webapps/{$webapp->id}");
+
+        dd(
+            $response->status(),
+            $response->json() ?: $response->body()
+        );
     }
 
     /**

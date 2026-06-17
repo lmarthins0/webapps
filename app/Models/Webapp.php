@@ -17,4 +17,9 @@ class Webapp extends Model
         return $this->hasMany(EnvVariables::class);
     }
 
+    public function dockerImage()
+    {
+        return $this->belongsTo(DockerImage::class);
+    }
+
 }

@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('webapps', function (Blueprint $table) {
-            $table->string('docker_tag')->nullable();
-            $table->string('tag_version')->nullable();
+        Schema::create('docker_images', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('path');
+            $table->string('tag');
+            $table->string('env_variables');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('webapps', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('docker_images');
     }
 };

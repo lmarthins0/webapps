@@ -13,27 +13,16 @@ class WebappService
         return $webapp;
     }
 
-    function setWebappDockerConfig(Webapp $webapp, array $dockerData)
+    function setWebappDockerImage(Webapp $webapp, array $dockerData)
     {
-        $webapp->docker_tag = $dockerData['docker_tag'];
-        $webapp->tag_version = $dockerData['tag_version'];
+        $webapp->docker_image_id = $dockerData['docker_image'];
         $webapp->save();
 
-        $env_variables = explode(',', $dockerData['env_variables']);
-        foreach ($env_variables as $env_variable):
-            EnvVariables::create([
-                'name' => $env_variable,
-                'webapp_id' => $webapp->id
-            ]);
-        endforeach;
+        return $webapp;
     }
 
-    function updateWebappDockerConfig(Webapp $webapp, array $dockerData): Webapp
+    function setWebappEnvVariables(Webapp $webapp, array $dockerData): Webapp
     {
-        $webapp->docker_tag = $dockerData['docker_tag'];
-        $webapp->tag_version = $dockerData['tag_version'];
-        $webapp->save();
-
         $env_variables = json_decode($dockerData['env_variables']);
         foreach ($env_variables as $env_variable):
             if (EnvVariables::where('webapp_id', $webapp->id)->where('name', $env_variable->name)->exists() == false):

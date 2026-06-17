@@ -1,5 +1,16 @@
 <?php
 
+$dockerMenu = [
+    [
+        'text' => 'Imagens',
+        'url' => '/dockerimages'
+    ],
+    [
+        'text' => 'Cadastrar nova imagem',
+        'url' => '/dockerimages/create'
+    ]
+];
+
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
@@ -20,10 +31,9 @@ $menu = [
         'can' => 'user',
     ],
     [
-        'text' => 'Dockers',
-        'docker_menu' => [
-            'criar novo docker' => '/'
-        ]
+        'text' => 'Docker',
+        'can' => 'admin',
+        'submenu' => $dockerMenu
     ]
 
 ];
