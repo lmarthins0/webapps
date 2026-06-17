@@ -12,7 +12,7 @@ use Illuminate\database\Eloquent\Collection;
 
 class WebappDockerConfigController extends Controller
 {
-    public function create(Webapp $webapp)
+    public function selectWebappDockerImage(Webapp $webapp)
     {
         $dockerImages = (new DockerImageService())->getAllDockerImages();
         return view('webapps.dockerimage', [
@@ -21,14 +21,14 @@ class WebappDockerConfigController extends Controller
         ]);
     }
 
-    public function store(WebappDockerImageRequest $request, Webapp $webapp)
+    public function setWebappDockerImage(WebappDockerImageRequest $request, Webapp $webapp)
     {
         (new WebappService())->setWebappDockerImage($webapp, $request->validated());
 
         return redirect("/webapps/{$webapp->id}");
     }
 
-    public function edit(Webapp $webapp)
+    public function showWebappVariables(Webapp $webapp)
     {
         $image_env_variables = (new DockerImageService())->getImageEnvVariables($webapp->docker_image_id);
         $webapp_env_variables = EnvVariables::where('webapp_id', $webapp->id)->get();
@@ -40,7 +40,7 @@ class WebappDockerConfigController extends Controller
         ]);
     }
 
-    public function update(WebappDockerRequest $request, Webapp $webapp)
+    public function setWebappVariables(WebappDockerRequest $request, Webapp $webapp)
     {
         $webapp = (new WebappService())->setWebappEnvVariables($webapp, $request->validated());
         return redirect("/webapps/{$webapp->id}");

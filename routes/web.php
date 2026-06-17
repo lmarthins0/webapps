@@ -19,10 +19,10 @@ Route::prefix('webapps')->group(function() {
     Route::get('/create', [WebappController::class, 'create']);
     Route::post('/store', [WebappController::class, 'store']);
     Route::get('/{webapp}', [WebappController::class, 'show']);
-    Route::get('/{webapp}/docker/image', [WebappDockerConfigController::class, 'create']);
-    Route::get('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'edit']);
-    Route::post('/{webapp}/docker/image', [WebappDockerConfigController::class, 'store']);
-    Route::post('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'update']);
+    Route::get('/{webapp}/docker/image', [WebappDockerConfigController::class, 'selectWebappDockerImage']);
+    Route::get('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'showWebappVariables']);
+    Route::post('/{webapp}/docker/image', [WebappDockerConfigController::class, 'setWebappDockerImage']);
+    Route::post('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'setWebappVariables']);
 });
 
 # reunião
