@@ -25,14 +25,6 @@ Route::prefix('webapps')->group(function() {
     Route::post('/{webapp}/docker/variables', [WebappDockerConfigController::class, 'setWebappVariables']);
 });
 
-# reunião
-//Route::get('/portainer', [ReuniaoController::class, 'portainer']);
-//Route::get('/gwmariadb', [ReuniaoController::class, 'gwmariadb']);
-//Route::get('/rustfs/{app}', [ReuniaoController::class, 'rustfs']);
-
-#Route::resource('gwmariadb', GwmariadbController::class);
-#Route::resource('portainer', PortainerController::class);
-
 Route::resource('dockerimages', DockerImageController::class);
 
 Route::prefix('gwmariadb')->group(function () {
