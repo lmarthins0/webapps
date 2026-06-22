@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class WebappRequest extends FormRequest
+class StoreImageVariableRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,7 @@ class WebappRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'justificativa' => 'required',
-            'tipo' => 'required',
+            'name' => 'string|required'
         ];
     }
-
-    public function messages(){
-        return [
-            'name.required' => 'O domínio é obrigatório',
-            'justificativa.required' => 'A justificativa é obrigatória',
-            'tipo.required' => 'O tipo é obrigatório',
-        ];
-    }
-
 }

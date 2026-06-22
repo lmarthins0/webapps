@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DockerImageRequest;
 use App\Http\Requests\DockerImageUpdateRequest;
+use App\Http\Requests\StoreImageVariableRequest;
 use App\Models\DockerImage;
 use App\Services\DockerImageService;
+use App\Services\ImageVariableService;
 
 class DockerImageController extends Controller
 {
@@ -55,5 +57,13 @@ class DockerImageController extends Controller
         if($deleted) {
             return redirect("/dockerimages");
         }
+    }
+
+    public function storeImageVariable(string $imageId, StoreImageVariableRequest $request)
+    {
+
+        (new ImageVariableService())->storeVariable($imageId, $request->validated());
+
+        return redirect("/dockerimages/{$imageId}");
     }
 }

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\DockerImage;
 
-class DockerImageService 
+class DockerImageService
 {
     function getAllDockerImages()
     {
@@ -18,11 +18,17 @@ class DockerImageService
         return $dockerImage;
     }
 
-    function getImageEnvVariables(string $docker_image_id) 
+    function getImageVariables(string $image_id)
     {
-        $raw_env_variables = DockerImage::find($docker_image_id, ['env_variables']);
-        $env_variables = explode(',', $raw_env_variables->env_variables);
-        return $env_variables;
+        $image = $this->getImageById($image_id);
+        $variables = [];
+        foreach($image->imageVariables as $variable) {
+            $variables[] = [
+                'name' => $variable->name,
+                'value' => null
+            ];
+        }
+        return $variables;
     }
 
     function createDockerImage(array $dockerImageData)
@@ -31,13 +37,12 @@ class DockerImageService
         $dockerImage->name = $dockerImageData['name'];
         $dockerImage->path = $dockerImageData['path'];
         $dockerImage->tag = $dockerImageData['tag'];
-        $dockerImage->env_variables = $dockerImageData['env_variables'];
         $dockerImage->save();
 
         return $dockerImage;
     }
 
-    function updateDockerImage(DockerImage $dockerImage, array $dockerImageData): DockerImage 
+    function updateDockerImage(DockerImage $dockerImage, array $dockerImageData): DockerImage
     {
         $dockerImage->update([
             'path' => $dockerImageData['path'],
@@ -48,10 +53,15 @@ class DockerImageService
         return $dockerImage;
     }
 
-    function destroyDockerImage(DockerImage $dockerImage) 
+
+    function destroyDockerImage(DockerImage $dockerImage)
     {
         $dockerImage->delete();
 
         return true;
+    }
+
+    function storeImageVariable() {
+
     }
 }

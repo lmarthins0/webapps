@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('env_variables', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('webapp_id')->constrained();
-            $table->string('name');
-            $table->string('value')->nullable();
-
+            $table->string('name')->unique();
+            $table->string('path');
+            $table->string('tag');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('env_variables');
+        Schema::dropIfExists('images');
     }
 };

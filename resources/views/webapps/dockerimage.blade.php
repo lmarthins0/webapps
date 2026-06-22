@@ -6,11 +6,11 @@
             <p>Configurar docker:</p>
         </div>
         <div>
-            <form action="/webapps/{{ $webapp->id }}/docker/image" method="post">
-                @method('post')
+            <form action="/webapps/{{ $webapp->id }}/dockerimage" method="post">
+                @method('put')
                 @csrf
                 <div class="input-group mb-3">
-                    <select name="docker_image" id="dockerImage">
+                    <select name="image" id="dockerImage">
                         <option @if (!$webapp->docker_image_id) selected @endif>
                             Seleciona a imagem docker para a aplicação
                         </option>

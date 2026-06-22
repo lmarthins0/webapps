@@ -20,13 +20,6 @@
                     <span class="input-group-text" id="basic-addon1">Versão imagem: </span>
                     <input type="text" class="form-control" value="{{ old('tag') }}" name="tag" placeholder="1.0.0">
                 </div>
-                <div>
-                    <div class="input-group">
-                        <span class="input-group-text">Variáveis de ambiente necessárias para a imagem:</span>
-                        <textarea class="form-control" value="{{ old('env_variables') }}" name="env_variables" placeholder="Ex: APP_URL,ACCESS_KEY,APP_TOKEN"></textarea>
-                    </div>
-                    <div class="form-text">Separe cara variável apenas por uma vírgula.</div>
-                </div>
                 <button type="submit" class="btn btn-primary">salvar</button>
             </form>
         </div>

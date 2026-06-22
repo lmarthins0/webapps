@@ -20,7 +20,7 @@
         @case('not_configured')
             <p>Cadastre a imagem docker antes de configurar banco de dados, bucket e publicar a aplicação. </p>
 
-            <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/docker/image">Adicionar imagem docker</a>
+            <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/dockerimage">Adicionar imagem docker</a>
         @break
 
         @case('configured')
@@ -43,8 +43,8 @@
                 do app com o bucket criado. 6) opção de deletar o bucket
             </div>
             <div class="mb-3">
-                <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/docker/image">Alterar imagem docker</a>
-                <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/docker/variables">Configurar variáveis de
+                <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/dockerimage">Alterar imagem docker</a>
+                <a class="btn btn-primary" href="/webapps/{{ $webapp->id }}/variables">Configurar variáveis de
                     ambiente</a>
                 @if ($webapp->status == 'Solicitado')
                     <a href="/portainer/{{ $webapp->id }}/store" class="btn btn-primary">Publicar aplicação</a>

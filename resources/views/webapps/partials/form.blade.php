@@ -2,7 +2,7 @@
     <div class="col">
         <label><b>Domínio</b></label>
         <div class="input-group mb-3 w-25">
-            <input type="text" class="form-control" name="dominio" value="{{ old('dominio', $webapp->dominio) }}">
+            <input type="text" class="form-control" name="name" value="{{ old('name', $webapp->name) }}">
             <span class="input-group-text ">fflch.usp.br</span>
         </div>
 
@@ -13,15 +13,6 @@
     <div class="col">
         <label><b>Justificativa</b></label>
         <textarea class="form-control" name="justificativa">{{ old('justificativa', $webapp->justificativa) }}</textarea>
-    </div>
-</div>
-
-<div class="row" id="url_github" style="display:none;">
-    <div class="col">
-        <label><b>Repositório github</b></label>
-        <input type="text" class="form-control" name="url_github"
-            value="{{ old('url_github', $webapp->url_github) }}"
-            placeholder="https://github.com/usuario/nome-repositorio">
     </div>
 </div>
 
@@ -45,30 +36,6 @@
     </div>
 </div>
 
-
-@section('javascripts_bottom')
-    <script>
-        $(document).ready(function() {
-
-            function toggleGithubField() {
-                if ($('#button_outro_app').is(':checked')) {
-                    $('#url_github').css('display', 'flex');
-                } else {
-                    $('#url_github').css('display', 'none');
-                }
-            }
-
-            //executa quando a página carrega
-            toggleGithubField();
-
-            //executa quando o usuário muda o radio
-            $('input[name="tipo"]').on('change', function() {
-                toggleGithubField();
-            });
-
-        });
-    </script>
-@endsection
 <style>
     label {
         margin-top: 5px;

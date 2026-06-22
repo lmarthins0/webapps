@@ -11,20 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('webapps', function (Blueprint $table) {
+        Schema::create('apps', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('dominio');
-            $table->string('url_github')->nullable();
             $table->string('justificativa');
             $table->string('tipo');
             $table->string('status')->default('Solicitado');
             $table->foreignId('user_id')->constrained();
-            $table->string('database_username')->nullable();
-            $table->string('database_name')->nullable();
-            $table->string('database_password')->nullable();
-            $table->string('bucket_username')->nullable();
-            $table->string('bucket_password')->nullable();
-            $table->string('bucket_name')->nullable();
+            $table->foreignId('image_id')->nullable();
+            $table->string('stack')->nullable()->unique();
             $table->string('version')->nullable();
             $table->timestamps();
         });
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('webapps');
+        Schema::dropIfExists('apps');
     }
 };

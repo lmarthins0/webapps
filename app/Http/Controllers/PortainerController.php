@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\DockerImageService;
+use App\Actions\GenerateComposeYml;
+use App\Services\PortainerService;
 use App\Services\WebappService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Symfony\Component\Yaml\Yaml;
 
 class PortainerController extends Controller
 {
@@ -17,32 +15,9 @@ class PortainerController extends Controller
     {
         $webapp = (new WebappService())->getWebappById(1);
         $dockerImage = $webapp->dockerImage;
-        $env_variables = $webapp->envVariables;
 
-        $environment = [];
-        foreach ($env_variables as $env_variable):
-            $environment[$env_variable->name] = $env_variable->value;
-        endforeach;
-
-        $yaml = [
-            'services' => [
-                'app' => [
-                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
-                    'restart' => 'unless-stopped',
-                    'ports' => '8888:80',
-                    'environment' => $environment,
-                    'entrypoint' => [
-                        'sh',
-                        '-c',
-                        'php artisan migrate --force && exec apache2-foreground'
-                    ]
-                ]
-            ]
-        ];
-
-        $parsedYaml = Yaml::dump($yaml, 4, 2);
-        $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
-        dd($parsedYaml);
+        $composeYml = GenerateComposeYml::execute($dockerImage, $webapp);
+        dd($composeYml);
     }
 
     /**
@@ -60,65 +35,12 @@ class PortainerController extends Controller
     {
         $webapp = (new WebappService())->getWebappById($webappId);
         $dockerImage = $webapp->dockerImage;
-        $webappName = explode('.', $webapp->dominio)[0];
+        $composeYml = GenerateComposeYml::execute($dockerImage, $webapp);
 
-        $portainerUrl = env('PORTAINER_URL');
-        $username = env('PORTAINER_USERNAME');
-        $password = env('PORTAINER_PASSWORD');
+        $response = (new PortainerService())->createStack($webapp->name, $composeYml);
 
-        $auth = Http::post(
-            "{$portainerUrl}/api/auth",
-            [
-                'username' => $username,
-                'password' => $password,
-            ]
-        );
-
-        $jwt = $auth->json('jwt');
-
-        $endpoints = Http::withToken($jwt)
-            ->get("{$portainerUrl}/api/endpoints")
-            ->json();
-        $endpointId = $endpoints[0]['Id'];
-
-
-        $env_variables = $webapp->envVariables;
-        $environment = [];
-        foreach ($env_variables as $env_variable):
-            $environment[$env_variable->name] = $env_variable->value;
-        endforeach;
-
-        $yaml = [
-            'services' => [
-                'app' => [
-                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
-                    'restart' => 'unless-stopped',
-                    'ports' => ['8888:80'],
-                    'environment' => $environment,
-                    'entrypoint' => [
-                        'sh',
-                        '-c',
-                        'php artisan migrate --force && exec apache2-foreground'
-                    ]
-                ]
-            ]
-        ];
-
-        $parsedYaml = Yaml::dump($yaml, 4, 2);
-        $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
-
-        $response = Http::withToken($jwt)
-            ->post(
-                "{$portainerUrl}/api/stacks/create/standalone/string?endpointId={$endpointId}",
-                [
-                    'Name' => $webappName,
-                    'StackFileContent' => $parsedYaml,
-                ]
-            );
-
-        $responseDecoded = $response->json();
         $webapp->status = "Publicado";
-        $webapp->stackId = $responseDecoded['Id'];
+        $webapp->stack = $response['Id'];
         $webapp->save();
 
         return redirect("/webapps/{$webapp->id}");
@@ -149,62 +71,11 @@ class PortainerController extends Controller
     {
         $webapp = (new WebappService())->getWebappById($webappId);
         $dockerImage = $webapp->dockerImage;
-        $stackId = $webapp->stackId;
-        $webappName = explode('.', $webapp->dominio)[0];
+        $stackId = $webapp->stack;
 
-        $portainerUrl = env('PORTAINER_URL');
-        $username = env('PORTAINER_USERNAME');
-        $password = env('PORTAINER_PASSWORD');
+        $composeYml = GenerateComposeYml::execute($dockerImage, $webapp);
 
-        $auth = Http::post(
-            "{$portainerUrl}/api/auth",
-            [
-                'username' => $username,
-                'password' => $password,
-            ]
-        );
-
-        $jwt = $auth->json('jwt');
-
-        $endpoints = Http::withToken($jwt)
-            ->get("{$portainerUrl}/api/endpoints")
-            ->json();
-        $endpointId = $endpoints[0]['Id'];
-
-
-        $env_variables = $webapp->envVariables;
-        $environment = [];
-        foreach ($env_variables as $env_variable):
-            $environment[$env_variable->name] = $env_variable->value;
-        endforeach;
-
-        $yaml = [
-            'services' => [
-                'app' => [
-                    'image' => "{$dockerImage->path}:{$dockerImage->tag}",
-                    'restart' => 'unless-stopped',
-                    'ports' => ['8888:80'],
-                    'environment' => $environment,
-                    'entrypoint' => [
-                        'sh',
-                        '-c',
-                        'php artisan migrate --force && exec apache2-foreground'
-                    ]
-                ]
-            ]
-        ];
-
-        $parsedYaml = Yaml::dump($yaml, 4, 2);
-        $parsedYaml = str_replace("'-c'", "-c", $parsedYaml);
-
-        $response = Http::withToken($jwt)
-            ->put(
-                "{$portainerUrl}/api/stacks/{$stackId}?endpointId={$endpointId}",
-                [
-                    'Name' => $webappName,
-                    'StackFileContent' => $parsedYaml,
-                ]
-            );
+        $response = (new PortainerService())->updateStack($webapp->name, $composeYml, $stackId);
 
         return redirect("/webapps/{$webapp->id}");
 
