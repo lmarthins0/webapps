@@ -18,10 +18,10 @@ class GenerateComposeYml
 
     public static function execute(DockerImage $dockerImage, Webapp $webapp)
     {
-        $env_variables = $webapp->envVariables;
+        $env_variables = $webapp->appVariables;
         $environment = [];
         foreach ($env_variables as $env_variable):
-            $environment[$env_variable->name] = $env_variable->value;
+            $environment[$env_variable->imageVariable->name] = $env_variable->value;
         endforeach;
 
          $composeArray = [

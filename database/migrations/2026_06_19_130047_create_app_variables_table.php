@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('app_id')->constrained();
             $table->foreignId('image_variable_id')->constrained();
-            $table->string('value');
+            $table->string('value')->nullable();
             $table->timestamps();
         });
     }

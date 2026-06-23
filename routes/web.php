@@ -25,7 +25,7 @@ Route::prefix('webapps')->group(function() {
     Route::get('/{webapp}/dockerimage', [WebappDockerConfigController::class, 'selectWebappDockerImage']);
     Route::get('/{webapp}/variables', ShowWebappVariablesController::class);
     Route::put('/{webapp}/dockerimage', [WebappController::class, 'updateImage']);
-    Route::post('/{webapp}/variables', UpdateWebappVariablesController::class);
+    Route::put('/{webapp}/variables/{variable}', UpdateWebappVariablesController::class);
 });
 
 Route::prefix('dockerimages')->group(function() {

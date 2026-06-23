@@ -22,11 +22,11 @@ class Webapp extends Model
 
     public function appVariables()
     {
-        return $this->hasMany(AppVariable::class);
+        return $this->hasMany(AppVariable::class, 'app_id', 'id');
     }
 
     public function dockerImage()
     {
-        return $this->belongsTo(DockerImage::class);
+        return $this->belongsTo(DockerImage::class, 'image_id', 'id');
     }
 }

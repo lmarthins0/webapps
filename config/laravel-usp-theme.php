@@ -3,11 +3,26 @@
 $dockerMenu = [
     [
         'text' => 'Imagens',
-        'url' => '/dockerimages'
+        'url' => '/dockerimages',
+        'can' => 'user'
     ],
     [
         'text' => 'Cadastrar nova imagem',
-        'url' => '/dockerimages/create'
+        'url' => '/dockerimages/create',
+        'can' => 'user'
+    ]
+];
+
+$appsMenu = [
+    [
+        'text' => 'Meus Apps',
+        'url' => config('app.url') . '/webapps',
+        'can' => 'user'
+    ],
+    [
+        'text' => 'Cadastrar App',
+        'url' => config('app.url') . '/webapps/create',
+        'can' => 'user'
     ]
 ];
 
@@ -21,18 +36,13 @@ $menu = [
         'key' => 'menu_dinamico',
     ],
     [
-        'text' => 'Meus Apps',
-        'url' => config('app.url') . '/webapps',
+        'text' => 'Apps',
         'can' => 'user',
-    ],
-    [
-        'text' => 'Cadastrar App',
-        'url' => config('app.url') . '/webapps/create', // com caminho absoluto
-        'can' => 'user',
+        'submenu' => $appsMenu
     ],
     [
         'text' => 'Docker',
-        'can' => 'admin',
+        'can' => 'user',
         'submenu' => $dockerMenu
     ]
 

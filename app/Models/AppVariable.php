@@ -10,9 +10,9 @@ class AppVariable extends Model
 
     public function app()
     {
-        return $this->belongsTo(Webapp::class);
+        return $this->belongsTo(Webapp::class, 'app_id', 'id');
     }
-
+    
     public function imageVariable()
     {
         return $this->belongsTo(ImageVariable::class);

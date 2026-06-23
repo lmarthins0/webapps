@@ -13,10 +13,9 @@ class ShowWebappVariablesController extends Controller
      */
     public function __invoke(Webapp $webapp)
     {
-        $env_variables = (new DockerImageService())->getImageVariables($webapp->image_id);
-        return view('webapps.envvariables', [
+        return view('webapps.editvariables', [
             'webapp' => $webapp,
-            'env_variables' => $env_variables
+            'env_variables' => $webapp->appVariables
         ]);
     }
 }

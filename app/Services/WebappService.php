@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Actions\StoreAppVariablesOnImageSelection;
+use App\Models\AppVariable;
 use App\Models\EnvVariables;
+use App\Models\ImageVariable;
 use App\Models\Webapp;
 
 class WebappService
@@ -15,14 +18,22 @@ class WebappService
 
     function updateImage(Webapp $webapp, array $requestData)
     {
+        $image = (new DockerImageService())->getImageById($requestData['image']);
+        foreach ($image->imageVariables as $variable) {
+            StoreAppVariablesOnImageSelection::execute($webapp, $variable);
+        }
+        
         $webapp->image_id = $requestData['image'];
         $webapp->save();
 
         return $webapp;
     }
 
-    function storeAppVariables(Webapp $webapp, array $requestData)
+    function storeAppVariables(AppVariable $appVariable, array $requestData)
     {
-        
+        $appVariable->value = $requestData['value'];
+        $appVariable->save();
+
+        return $appVariable;
     }
 }
