@@ -29,4 +29,14 @@ class Webapp extends Model
     {
         return $this->belongsTo(DockerImage::class, 'image_id', 'id');
     }
+
+    public function Bucket()
+    {
+        return $this->hasMany(Bucket::class, 'app_id', 'id');
+    }
+
+    public function AppDatabase()
+    {
+        return $this->hasOne(AppDatabase::class, 'app_id', 'id');
+    }
 }

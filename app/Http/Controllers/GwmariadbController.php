@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GwmariadbService;
 use Illuminate\Http\Request;
 use App\Services\WebappService;
 use Illuminate\Support\Facades\Http;
@@ -13,15 +14,9 @@ class GwmariadbController extends Controller
      */
     public function index()
     {
-        $payload = [
-            'action' => 'listar_databases',
-        ];
+        $response = (new GwmariadbService())->listarDatabase();
 
-        $response = Http::withHeaders([
-            'X-Token' => env('GWMARIADB_TOKEN'),
-        ])->post(env('GWMARIADB_URL'), $payload);
-
-        dd($response->json());
+        dd($response);
     }
 
     /**
@@ -38,16 +33,9 @@ class GwmariadbController extends Controller
     public function store(string $appId)
     {
         $webapp = (new WebappService())->getWebappById($appId);
-        $siteName = explode('.', $webapp->dominio)[0];
+        $siteName = $webapp->name;
 
-        $payload = [
-            'action' => 'criar_database_usuario_privilegio',
-            'nome' => $siteName
-        ];
-
-        $response = Http::withHeaders([
-            'X-Token' => env('GWMARIADB_TOKEN'),
-        ])->post(env('GWMARIADB_URL'), $payload);
+        $response = (new GwmariadbService($siteName))->storeDatabase();
 
         return var_dump($response->json());
     }
@@ -63,17 +51,22 @@ class GwmariadbController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
+    public function edit(string $appId) {
+        
+        return view('gwmariadb.edit');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $appId)
     {
-        //
+        $webapp = (new WebappService())->getWebappById($appId);
+        $siteName = $webapp->name;
+
+        $response = (new GwmariadbService($siteName))->trocarSenhaUsuario();
+
+        return $response;
     }
 
     /**

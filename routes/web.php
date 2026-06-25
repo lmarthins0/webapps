@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\AppDatabase\AppDatabaseController;
+use App\Http\Controllers\Bucket\BucketController;
 use App\Http\Controllers\Bucket\CreateBucketController;
 use App\Http\Controllers\Bucket\DeleteBucketController;
 use App\Http\Controllers\Bucket\TestConnectionBucketController;
 use App\Http\Controllers\Dockerimage\ImageVariableController;
 use App\Http\Controllers\DockerImageController;
+use App\Http\Controllers\EditWebappImageController;
 use App\Http\Controllers\Webapps\ShowWebappVariablesController;
 use App\Http\Controllers\Gwmariadb\TestGwmariadbConnectionController;
 use App\Http\Controllers\GwmariadbController;
@@ -22,8 +25,10 @@ Route::prefix('webapps')->group(function() {
     Route::get('/create', [WebappController::class, 'create']);
     Route::post('/store', [WebappController::class, 'store']);
     Route::get('/{webapp}', [WebappController::class, 'show']);
-    Route::get('/{webapp}/dockerimage', [WebappDockerConfigController::class, 'selectWebappDockerImage']);
+    Route::get('/{webapp}/dockerimage', EditWebappImageController::class);
     Route::get('/{webapp}/variables', ShowWebappVariablesController::class);
+    Route::get('/{webapp}/database/store', [GwmariadbController::class, 'store']);
+    Route::get('/{webapp}/bucket/store', [BucketController::class, 'store']);
     Route::put('/{webapp}/dockerimage', [WebappController::class, 'updateImage']);
     Route::put('/{webapp}/variables/{variable}', UpdateWebappVariablesController::class);
 });
@@ -46,15 +51,16 @@ Route::prefix('imagevariables')->group(function () {
 
 Route::prefix('gwmariadb')->group(function () {
     Route::get('/', [GwmariadbController::class, 'index']);
-    Route::get('/store/{webapp}', [GwmariadbController::class, 'store']);
-    Route::get('/delete/{webapp}', [GwmariadbController::class, 'destroy']);
     Route::get('/testconnection', TestGwmariadbConnectionController::class);
+    Route::get('/{appdatabase}', [GwmariadbController::class, 'show']);
+    Route::put('/{appdatabase}', [GwmariadbController::class, 'update']);
+    Route::delete('/{appdatabase}', [GwmariadbController::class, 'destroy']);
 });
 
 Route::prefix('bucket')->group(function() {
-    Route::get('/store/{webapp}', CreateBucketController::class);
-    Route::get('/delete/{webapp}', DeleteBucketController::class);
-    Route::get('/test/{webapp}', TestConnectionBucketController::class);
+    Route::get('/test', TestConnectionBucketController::class);
+    Route::get('/{bucket}', [BucketController::class, 'show']);
+    Route::delete('/{bucket}', [BucketController::class, 'destroy']);
 });
 
 Route::prefix('portainer')->group(function() {
