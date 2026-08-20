@@ -6,6 +6,9 @@ use App\Http\Requests\WebappRequest;
 use App\Http\Requests\AppUpdateRequest;
 use App\Models\Webapp;
 use App\Services\WebappService;
+use App\Services\DockerImageService;
+use App\Http\Requests\UpdateAppVariableRequest;
+use App\Models\AppVariable;
 
 class WebappController extends Controller
 {
@@ -50,10 +53,34 @@ class WebappController extends Controller
         return redirect('/');
     }
 
-    public function updateImage(AppUpdateRequest $request, Webapp $webapp)
+    public function update_image(AppUpdateRequest $request, Webapp $webapp)
     {
         $webapp = (new WebappService()->updateImage($webapp, $request->validated()));
 
         return redirect("/webapps/{$webapp->id}");
+    }
+
+    public function edit_image(Webapp $webapp)
+    {
+        $dockerImages = (new DockerImageService())->getAllDockerImages();
+        return view('webapps.dockerimage', [
+            'webapp' => $webapp,
+            'docker_images' => $dockerImages
+        ]);
+    }
+
+    public function show_variables(Webapp $webapp)
+    {
+        return view('webapps.editvariables', [
+            'webapp' => $webapp,
+            'env_variables' => $webapp->appVariables
+        ]);
+    }
+
+    public function update_variable(Webapp $webapp, AppVariable $variable, UpdateAppVariableRequest $request)
+    {
+        (new WebappService())->storeAppVariables($variable, $request->validated());
+
+        return redirect("/webapps/{$variable->app_id}/variables");
     }
 }

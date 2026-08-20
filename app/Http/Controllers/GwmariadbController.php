@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppDatabase;
 use App\Services\GwmariadbService;
 use Illuminate\Http\Request;
 use App\Services\WebappService;
+use App\Services\AppDatabaseService;
 use Illuminate\Support\Facades\Http;
 
 class GwmariadbController extends Controller
@@ -36,16 +38,23 @@ class GwmariadbController extends Controller
         $siteName = $webapp->name;
 
         $response = (new GwmariadbService($siteName))->storeDatabase();
+        if($response == false) {
+            return redirect("/webapps/{$appId}");
+        }
 
-        return var_dump($response->json());
+        (new AppDatabaseService())->storeDatabaseData($webapp, $response['senha']);
+
+        return redirect("/webapps/{$appId}");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(AppDatabase $appdatabase)
     {
-        //
+        return view('gwmariadb.show', [
+            'database' => $appdatabase
+        ]);
     }
 
     /**
@@ -59,14 +68,16 @@ class GwmariadbController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $appId)
+    public function update(AppDatabase $appdatabase)
     {
-        $webapp = (new WebappService())->getWebappById($appId);
+        $webapp = $appdatabase->App;
         $siteName = $webapp->name;
 
         $response = (new GwmariadbService($siteName))->trocarSenhaUsuario();
 
-        return $response;
+        (new AppDatabaseService())->updateDatabasePassword($appdatabase, $response['senha']);
+
+        return redirect("/gwmariadb/{$appdatabase->id}");
     }
 
     /**
@@ -75,5 +86,14 @@ class GwmariadbController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function test_connection()
+    {
+        $response = Http::withHeaders([
+            'X-Token' => env('GWMARIADB_TOKEN'),
+        ])->get(env('GWMARIADB_URL'));
+
+        return json_encode($response->json());
     }
 }
