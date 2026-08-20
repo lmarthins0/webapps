@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('app_databases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('app_id')->constrained();
+            $table->foreignId('app_id')->nullable()->constrained();
             $table->string('name');
             $table->string('username');
             $table->string('password');

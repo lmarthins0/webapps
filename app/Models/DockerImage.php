@@ -17,7 +17,7 @@ class DockerImage extends Model
 
     public function apps() 
     {
-        return $this->hasMany(Webapp::class);
+        return $this->hasMany(Webapp::class, 'image_id', 'id');
     }
 
     public function imageVariables()

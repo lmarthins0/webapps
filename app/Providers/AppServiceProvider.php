@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\ImageVariable;
+use App\Observers\ImageVariableObserver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        ImageVariable::observe(ImageVariableObserver::class);
     }
 }

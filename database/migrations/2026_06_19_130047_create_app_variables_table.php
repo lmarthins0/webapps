@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('app_variables', function (Blueprint $table) {
             $table->id();
             $table->foreignId('app_id')->constrained();
-            $table->foreignId('image_variable_id')->constrained();
+            $table->foreignId('image_variable_id')->constrained()->cascadeOnDelete();
             $table->string('value')->nullable();
             $table->timestamps();
         });
