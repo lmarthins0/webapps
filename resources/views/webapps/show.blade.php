@@ -25,9 +25,12 @@
 
         @case('configured')
             <div class="mb-3">
-                <a href="/gwmariadb/store/{{ $webapp->id }}" class="btn btn-primary">Cirar bancos de dados</a>
-                <a href="/gwmariadb/show/{{ $webapp->id}}" class="btn btn-primary">Ver banco de dados</a>
-                <a href="/gwmariadb/testconnection" class="btn btn-secondary">Testar conexão</a>
+                @if (!$webapp->AppDatabase)
+                    <a href="/webapps/{{ $webapp->id }}/database/store" class="btn btn-primary">Criar bancos de dados</a>
+                @else
+                    <a href="/gwmariadb/{{ $webapp->AppDatabase->id }}" class="btn btn-primary">Ver banco de dados</a>
+                    <a href="/gwmariadb/testconnection" class="btn btn-secondary">Testar conexão</a>
+                @endif
                 <br>
                 Implementar: 1) Criar um banco de dados para o dominio, 2) Criar um usuário, 3) Criar uma senha para esse usuário e
                 guardar localmente, 4) Conceder as permissões necessárias para o usuário acessar o banco de dados criado 5) Testar a
@@ -35,7 +38,7 @@
             </div>
             <div class="mb-3">
                 <a href="/bucket/store/{{ $webapp->id }}" class="btn btn-primary">Criar Bucket</a>
-                <a href="/bucket/show/{{$webapp->id}}" class="btn btn-primary">Ver dados bucket</a>
+                <a href="/bucket/show/{{ $webapp->id }}" class="btn btn-primary">Ver dados bucket</a>
                 <a href="/bucket/delete/{{ $webapp->id }}" class="btn btn-danger">Excluir bucket</a>
                 <br>
                 Implementar: 1) Criar um bucket para o dominio (ok), 2) Criar um usuário, 3) Criar uma senha para esse usuário e
@@ -55,7 +58,7 @@
                 <br>
                 Implementado:
                 <br> 1- Model Variaveis
-                <br> 2- Model Imagem 
+                <br> 2- Model Imagem
                 <br> 3- Relacionamento entre imagem, variaveis e webapp
                 <br> 4- Adição e atualização da imagem e das variaveis para o webapp
                 <br> 5- Requisições para publicação do app no container e atualização do mesmo

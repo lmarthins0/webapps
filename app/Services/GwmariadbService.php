@@ -35,24 +35,26 @@ class GwmariadbService
 
     public function storeDatabase()
     {
+        //dd($this->userExists(), $this->databaseExists());
         if(!$this->userExists() && !$this->databaseExists()) {
             $response = $this->criarDatabaseUsuarioPrivilegio();
-
             return $response;
         }
 
         if(!$this->userExists() && $this->databaseExists()) {
-            $response = $this->criarDatabase();
+            $response = $this->criarUsuario();
             $this->concederPrivilegios();
-
             return $response;
         }
 
         if($this->userExists() && !$this->databaseExists()) {
-            $response = $this->criarUsuario();
+            $response = $this->criarDatabase();
             $this->concederPrivilegios();
-
             return $response;
+        }
+
+        if($this->userExists() && $this->databaseExists()) {
+            return false;
         }
     }
 
@@ -61,8 +63,7 @@ class GwmariadbService
         $action = 'criar_database';
         $payload = GetGwmariadbPayload::execute($action, $this->siteName);
         $response = SendGwmariadbRequest::execute($payload);
-
-        return $response->json();
+        return $response;
     }
 
     public function trocarSenhaUsuario()
@@ -70,8 +71,7 @@ class GwmariadbService
         $action = 'trocar_senha';
         $payload = GetGwmariadbPayload::execute($action, $this->siteName);
         $response = SendGwmariadbRequest::execute($payload);
-
-        return $response->json();
+        return $response;
     }
 
     public function criarUsuario()
@@ -115,10 +115,7 @@ class GwmariadbService
         $action = 'database_existe';
         $payload = GetGwmariadbPayload::execute($action, $this->siteName);
         $response = SendGwmariadbRequest::execute($payload);
-
-        dd($response->json());
-
-        return true;
+        return $response['existe'];
     }
 
     protected function userExists()
@@ -127,8 +124,6 @@ class GwmariadbService
         $payload = GetGwmariadbPayload::execute($action, $this->siteName);
         $response = SendGwmariadbRequest::execute($payload);
 
-        dd($response->json());
-
-        return true;
+        return $response['existe'];
     }
 }

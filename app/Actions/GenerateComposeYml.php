@@ -20,9 +20,16 @@ class GenerateComposeYml
     {
         $env_variables = $webapp->appVariables;
         $environment = [];
+        $padrao = '^\{\{.*\}\}$^';
         foreach ($env_variables as $env_variable):
-            $environment[$env_variable->imageVariable->name] = $env_variable->value;
+            if(preg_match($padrao, $env_variable->value)) {
+                $environment[$env_variable->imageVariable->name] = GetDbVariableValue::execute($env_variable);
+            } else {
+                $environment[$env_variable->imageVariable->name] = $env_variable->value;
+            }
         endforeach;
+
+
 
          $composeArray = [
             'services' => [

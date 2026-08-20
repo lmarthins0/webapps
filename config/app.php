@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'dbname' => 'dbname',
+    'dbhost' => 'dbhost',
+    'dbpassword' => 'dbpassword',
+    'dbuser' => 'dbuser'
 ];

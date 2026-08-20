@@ -20,6 +20,6 @@ class SendGwmariadbRequest
             'X-Token' => env('GWMARIADB_TOKEN'),
         ])->post(env('GWMARIADB_URL'), $payload);
 
-        return $response;
+        return $response->json();
     }
 }
