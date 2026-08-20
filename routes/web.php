@@ -29,14 +29,11 @@ Route::prefix('dockerimages')->group(function() {
     Route::get('/{dockerimage}', [DockerImageController::class, 'show']);
     Route::get('/{dockerimage}/edit', [DockerImageController::class, 'edit']);
     Route::post('/', [DockerImageController::class, 'store']);
-    Route::post('/{dockerimage}/variables/store', [DockerImageController::class, 'store_variable']);
+    Route::post('/{dockerimage}/variable/store', [DockerImageController::class, 'store_variable']);
     Route::put('/{dockerimage}', [DockerImageController::class, 'update']);
+    Route::put('/{dockerimage}/variable/{imagevariable}', [DockerImageController::class, 'update_variable']);
     Route::delete('/{dockerimage}', [DockerImageController::class, 'destroy']);
-});
-
-Route::prefix('imagevariables')->group(function () {
-    Route::put('/{imagevariable}', [DockerImageController::class, 'update_variable']);
-    Route::delete('/{imagevariable}', [DockerImageController::class, 'destroy_variable']);
+    Route::delete('/{dockerimage}/variable/{imagevariable}', [DockerImageController::class, 'destroy_variable']);
 });
 
 Route::prefix('gwmariadb')->group(function () {

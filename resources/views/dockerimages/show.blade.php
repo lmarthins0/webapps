@@ -29,14 +29,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($docker_image->imageVariables)    
+                                    @if ($docker_image->imageVariables)
                                         @foreach ($docker_image->imageVariables as $variable)
                                             <tr>
                                                 <td>
-                                                    <form class="d-flex justify-content-between" action="/imagevariables/{{ $variable->id }}" method="post">
+                                                    <form class="d-flex justify-content-between"
+                                                        action="/dockerimages/{{ $docker_image->id }}/variable/{{ $variable->id }}"
+                                                        method="post">
                                                         @csrf
                                                         @method('delete')
-                                                        <p>{{ $variable->name}}</p>
+                                                        <p>{{ $variable->name }}</p>
                                                         <button class="btn btn-danger" type="submit">remover</button>
                                                     </form>
                                                 </td>
@@ -46,7 +48,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <form class="ml-4 w-50" action="/dockerimages/{{ $docker_image->id }}/variables/store"
+                        <form class="ml-4 w-50" action="/dockerimages/{{ $docker_image->id }}/variable/store"
                             method="post">
                             @csrf
                             @method('post')
