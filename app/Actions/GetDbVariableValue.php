@@ -16,18 +16,17 @@ class GetDbVariableValue
 
     public static function execute(AppVariable $variable)
     {
-        $database = $variable->App->AppDatabase;
-        $variableName = $variable->imageVariable->name;
-        $variableNameTrimed = trim($variableName, '{}');
-        if($variableNameTrimed == 'dbuser') {
-            return $database->user;
+        $database = $variable->app->AppDatabase;
+        $variableValueTrimed = trim($variable->value, '{}');
+        if($variableValueTrimed == 'dbuser') {
+            return $database->username;
         } 
 
-        if($variableNameTrimed == 'dbname') {
+        if($variableValueTrimed == 'dbname') {
             return $database->name;
         }
 
-        if($variableNameTrimed == 'dbpassword') {
+        if($variableValueTrimed == 'dbpassword') {
             return $database->password;
         }
 

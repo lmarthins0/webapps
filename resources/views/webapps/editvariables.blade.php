@@ -38,6 +38,27 @@
                         </tbody>
                     </table>
                 @endif
+                <small>
+                    Para adicionar as informações de banco de dados, utilize as variáveis:
+                    @switch($webapp->Appdatabase->driver)
+                        @case('mariadb')
+                            <br />@{{mariadb_name}}
+                            <br />@{{mariadb_user}}
+                            <br />@{{mariadb_password}}
+                        @break
+
+                        @case('postgres')
+                            <br />@{{postgres_name}}
+                            <br />@{{postgres_user}}
+                            <br />@{{postgres_password}}
+                        @break
+
+                        @default
+                            <br />@{{db_name}}
+                            <br />@{{db_user}}
+                            <br />@{{db_password}}
+                    @endswitch
+                </small>
             </div>
         </div>
     </div>

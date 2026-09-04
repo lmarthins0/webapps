@@ -36,7 +36,7 @@ class PortainerController extends Controller
         $webapp = (new WebappService())->getWebappById($webappId);
         $dockerImage = $webapp->dockerImage;
         $composeYml = GenerateComposeYml::execute($dockerImage, $webapp);
-
+        dd($composeYml);
         $response = (new PortainerService())->createStack($webapp->name, $composeYml);
 
         $webapp->status = "Publicado";

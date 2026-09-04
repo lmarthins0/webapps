@@ -24,7 +24,6 @@ class DockerImageUpdateRequest extends FormRequest
     {
         return [
             'path' => 'required|string',
-            'tag' => 'required|string',
             'env_variables' => 'required|string'
         ];
     }
@@ -32,7 +31,6 @@ class DockerImageUpdateRequest extends FormRequest
         public function messages(){
         return [
             'path.required' => 'A tag docker é obrigatória.',
-            'tag.required' => 'A versão da tag é obrigatória.',
             'env_variables.required' => 'As variáveis de ambiente são obrigatórias.',
         ];
     }

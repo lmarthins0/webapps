@@ -25,15 +25,17 @@ class WebappRequest extends FormRequest
         return [
             'name' => 'required',
             'justificativa' => 'required',
-            'tipo' => 'required',
+            'image_id' => 'required',
+            'version' => 'required'
         ];
     }
 
     public function messages(){
         return [
-            'name.required' => 'O domínio é obrigatório',
-            'justificativa.required' => 'A justificativa é obrigatória',
-            'tipo.required' => 'O tipo é obrigatório',
+            'name.required' => 'O domínio é obrigatório.',
+            'justificativa.required' => 'A justificativa é obrigatória.',
+            'image_id' => 'A imagem do app é obrigatória.',
+            'version.required' => 'A versão da imagme é obrigatória.'
         ];
     }
 

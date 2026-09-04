@@ -89,22 +89,5 @@ services:
       DB_PASS: admin
       DB_PORT: 3306
 
-  rustfs:
-    image: rustfs/rustfs:latest
-    container_name: webapps_rustfs
-    ports:
-      - "9100:9000" # API S3 (para enviar arquivos com PHP)
-      - "9101:9001" # Console Web
-    environment:
-      - RUSTFS_VOLUMES=/data
-      - RUSTFS_ADDRESS=0.0.0.0:9000
-      - RUSTFS_CONSOLE_ADDRESS=0.0.0.0:9001
-      - RUSTFS_CONSOLE_ENABLE=true
-      # Defina aqui as chaves de acesso para a API e o Console
-      - RUSTFS_ACCESS_KEY=rustfsadmin
-      - RUSTFS_SECRET_KEY=rustfsadmin123
-    networks:
-      - webapps-network
-
 networks:
   webapps-network:

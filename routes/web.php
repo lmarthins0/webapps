@@ -15,11 +15,11 @@ Route::prefix('webapps')->group(function() {
     Route::get('/create', [WebappController::class, 'create']);
     Route::post('/store', [WebappController::class, 'store']);
     Route::get('/{webapp}', [WebappController::class, 'show']);
-    Route::get('/{webapp}/dockerimage', [WebappController::class, 'edit_image']);
     Route::get('/{webapp}/variables', [WebappController::class, 'show_variables']);
     Route::get('/{webapp}/database/store', [GwmariadbController::class, 'store']);
     Route::get('/{webapp}/bucket/store', [BucketController::class, 'store']);
-    Route::put('/{webapp}/dockerimage', [WebappController::class, 'update_image']);
+    Route::get('/{webapp}/edit', [WebappController::class, 'edit']);
+    Route::put('/{webapp}/', [WebappController::class, 'update']);
     Route::put('/{webapp}/variables/{variable}', [WebappController::class, 'update_variable']);
 });
 

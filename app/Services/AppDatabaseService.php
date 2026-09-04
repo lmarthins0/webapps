@@ -22,9 +22,9 @@ class AppDatabaseService
         $appDatabase->username = $webapp->name;
         $appDatabase->password = $password;
         $appDatabase->app_id = $webapp->id;
+        $appDatabase->driver = 'mariadb';
 
         $appDatabase->save();
-
         return $appDatabase;
     }
 

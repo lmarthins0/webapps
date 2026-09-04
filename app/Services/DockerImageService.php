@@ -36,7 +36,6 @@ class DockerImageService
         $dockerImage = new DockerImage();
         $dockerImage->name = $dockerImageData['name'];
         $dockerImage->path = $dockerImageData['path'];
-        $dockerImage->tag = $dockerImageData['tag'];
         $dockerImage->save();
 
         return $dockerImage;
@@ -45,9 +44,7 @@ class DockerImageService
     function updateDockerImage(DockerImage $dockerImage, array $dockerImageData): DockerImage
     {
         $dockerImage->update([
-            'path' => $dockerImageData['path'],
-            'tag' => $dockerImageData['tag'],
-            'env_variables' => $dockerImageData['env_variables']
+            'path' => $dockerImageData['path']
         ]);
 
         return $dockerImage;

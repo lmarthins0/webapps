@@ -16,12 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('dominio');
             $table->string('justificativa');
-            $table->string('tipo');
-            $table->string('status')->default('Solicitado');
+            $table->string('version');
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('image_id')->nullable();
+            $table->foreignId('image_id');
             $table->string('stack')->nullable()->unique();
-            $table->string('version')->nullable();
             $table->timestamps();
         });
     }

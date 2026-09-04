@@ -8,15 +8,15 @@
         <div class="w-25 mb-2">
             <div class="input-group mb-2">
                 <span class="input-group-text">Nome</span>
-                <input disabled type="text" class="form-control" value="&#123;&#123;{{ config('app.dbname') }}&#125;&#125;">
+                <input disabled type="text" class="form-control" value="{{ config('app.dbname') }}">
             </div>
             <div class="input-group mb-2">
                 <span class="input-group-text">Usuário</span>
-                <input disabled type="text" class="form-control" value="&#123;&#123;{{ config('app.dbuser') }}&#125;&#125;">
+                <input disabled type="text" class="form-control" value="{{ config('app.dbuser') }}">
             </div>
             <div class="input-group mb-2">
                 <span class="input-group-text">Senha</span>
-                <input disabled type="text" class="form-control" value="&#123;&#123;{{ config('app.dbpassword') }}&#125;&#125;">
+                <input disabled type="text" class="form-control" value="{{ config('app.dbpassword') }}">
             </div>
         </div>
         <div class="d-flex justify-content-start w-50">

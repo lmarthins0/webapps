@@ -23,7 +23,17 @@ class AppUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required'
+            'name' => 'required',
+            'image_id' => 'required',
+            'version' => 'required'
+        ];
+    }
+
+    public function messages(){
+        return [
+            'name.required' => 'O domínio é obrigatório.',
+            'image_id' => 'A imagem do app é obrigatória.',
+            'version.required' => 'A versão da imagme é obrigatória.'
         ];
     }
 }

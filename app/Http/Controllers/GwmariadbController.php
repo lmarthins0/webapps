@@ -41,9 +41,7 @@ class GwmariadbController extends Controller
         if($response == false) {
             return redirect("/webapps/{$appId}");
         }
-
-        (new AppDatabaseService())->storeDatabaseData($webapp, $response['senha']);
-
+        $appDatabase = (new AppDatabaseService())->storeDatabaseData($webapp, $response['senha']);
         return redirect("/webapps/{$appId}");
     }
 

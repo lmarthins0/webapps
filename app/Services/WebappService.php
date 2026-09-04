@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Actions\StoreAppVariablesOnImageSelection;
 use App\Models\AppVariable;
-use App\Models\EnvVariables;
-use App\Models\ImageVariable;
 use App\Models\Webapp;
 
 class WebappService
@@ -25,6 +23,34 @@ class WebappService
         
         $webapp->image_id = $requestData['image'];
         $webapp->save();
+
+        return $webapp;
+    }
+
+    function updateApp(Webapp $webapp, array $requestData): Webapp
+    {
+        $requestData['dominio'] = $requestData['name'] . '.fflch.usp.br';
+        $webapp->name = $requestData['name'];
+        $webapp->dominio = $requestData['dominio'];
+        $webapp->version = $requestData['version'];
+        $webapp->image_id = $requestData['image_id'];
+
+        $webapp->save();
+
+        return $webapp;
+    }
+
+    function storeApp(array $requestData)
+    {
+        $requestData['user_id'] = auth()->user()->id;
+        $requestData['dominio'] = $requestData['name'] . '.fflch.usp.br';
+
+        $webapp = Webapp::create($requestData);
+
+        $image = (new DockerImageService())->getImageById($requestData['image_id']);
+        foreach ($image->imageVariables as $variable) {
+            StoreAppVariablesOnImageSelection::execute($webapp, $variable);
+        }
 
         return $webapp;
     }

@@ -24,16 +24,14 @@ class DockerImageRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'path' => 'required|string',
-            'tag' => 'required|string'
+            'path' => 'required|string'
         ];
     }
 
         public function messages(){
         return [
             'name.required' => 'O nome da imagem é obrigatório.',
-            'path.required' => 'A tag docker é obrigatória.',
-            'tag.required' => 'A versão da tag é obrigatória.'
+            'path.required' => 'A tag docker é obrigatória.'
         ];
     }
 }

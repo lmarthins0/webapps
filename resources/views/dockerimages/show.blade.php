@@ -9,9 +9,8 @@
                 <form action="/dockerimages/{{ $docker_image->id }}" method="post">
                     @method('delete')
                     @csrf
-                    <p class="mb-3">Nome da imagem: {{ $docker_image->name }}</p>
-                    <p class="mb-3">Imagem docker: {{ $docker_image->path }}</p>
-                    <p class="mb-3">Versão da imagem: {{ $docker_image->tag }}</p>
+                    <p class="mb-1"><b>Nome da imagem:</b> {{ $docker_image->name }}</p>
+                    <p class="mb-1"><b>Imagem docker:</b> {{ $docker_image->path }}</p>
 
                     <a class="btn btn-primary" href="/dockerimages/{{ $docker_image->id }}/edit">editar</a>
                     <button type="submit" class="btn btn-danger">deletar</button>

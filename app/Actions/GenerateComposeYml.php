@@ -29,8 +29,6 @@ class GenerateComposeYml
             }
         endforeach;
 
-
-
          $composeArray = [
             'services' => [
                 'app' => [
